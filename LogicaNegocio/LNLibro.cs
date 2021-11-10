@@ -62,6 +62,22 @@ namespace LogicaNegocio
 
             return result;
         }
+
+        public int insertar(ELibro libro)
+        {
+            int result;
+            ADLibro adLibro = new ADLibro(cadConexion);
+            try
+            {
+                result = adLibro.insertar(libro);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return result;
+        }
         #endregion
     }
 }

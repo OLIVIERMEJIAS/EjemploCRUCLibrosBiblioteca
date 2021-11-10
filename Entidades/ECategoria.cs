@@ -14,14 +14,14 @@ namespace Entidades
 
         public ECategoria()
         {
-            claveCategoria = string.Empty;
-            descripcion = string.Empty;
+            ClaveCategoria = string.Empty;
+            Descripcion = string.Empty;
         }
 
         public ECategoria(string claCate, string desc)
         {
-            claveCategoria = claCate;
-            descripcion = desc;
+            ClaveCategoria = claCate;
+            Descripcion = desc;
         }
     }
 }

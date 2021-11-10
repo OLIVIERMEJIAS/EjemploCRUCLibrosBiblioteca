@@ -70,7 +70,7 @@ namespace EjemploCRUCLibrosBiblioteca
         private void btnGuardar_Click(object sender, EventArgs e)
         {
             ELibro libro;
-            LNLibro ln = new LNLibro();
+            LNLibro ln = new LNLibro(Config.getCadConexion);
             if (textosLlenos())
             {
                 libro = new ELibro(txtClaveLibro.Text,
@@ -79,18 +79,33 @@ namespace EjemploCRUCLibrosBiblioteca
                     false);
                 try
                 {
-                    //TODO: AGREGAR ACCESO A CAPA DE LOGICA
+                   
                     if (!ln.libroRepetido(libro))
                     {
                         if (!ln.claveLibroRepetida(libro.ClaveLibro))
                         {
-
+                            if (ln.insertar(libro) > 0)
+                            {
+                                MessageBox.Show("Guardado con éxito!");
+                                //TODO:
+                            }
                         }
+                        else
+                            MessageBox.Show("Esa Clave de libro " +
+                                "ya se encuentra asgnada a otro libro");
+                        txtClaveLibro.Focus();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ese título ya existe para el autor " +
+                            "indicado");
+                        txtTituloLibro.Focus();
                     }
                 }
                 catch(Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK);
+                    MessageBox.Show(ex.Message, "Error!", 
+                        MessageBoxButtons.OK,MessageBoxIcon.Error);
                 }
             }
         }

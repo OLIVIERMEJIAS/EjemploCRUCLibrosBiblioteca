@@ -31,7 +31,7 @@ namespace AccesoDatos
         {
             bool result = false;
             string sentencia;
-            sentencia = $"Select 1 from Libro where titulo = {libro.Titulo} and claveAutor = {libro.ClaveAutor}";
+            sentencia = $"Select 1 from Libro where titulo = '{libro.Titulo}' and claveAutor = '{libro.ClaveAutor}'";
             //1. CREAR OBJETOS DE DATOS DE ADO.NET
             SqlCommand comandoSQL = new SqlCommand();
             SqlConnection conexionSQL = new SqlConnection(cadConexion);
@@ -46,12 +46,13 @@ namespace AccesoDatos
             {
                 conexionSQL.Open();
                 datos = comandoSQL.ExecuteReader();
+                result = datos.HasRows ? true : false;
                 conexionSQL.Close();
                 //if (datos.HasRows)
                 //    result = true;
                 //else 
                 //    result = false;
-                result = datos.HasRows ? true : false;
+                
             }
             catch (Exception)
             {
@@ -76,7 +77,6 @@ namespace AccesoDatos
             //1
             SqlCommand comando = new SqlCommand();
             SqlConnection conexion = new SqlConnection(cadConexion);
-            SqlDataReader datos; //no se instancia
             //2
             comando.CommandText = "Select 1 from Libro where claveLibro = @claveLibro";
             comando.Parameters.AddWithValue("@claveLibro", clave);
@@ -85,15 +85,16 @@ namespace AccesoDatos
             {
                 conexion.Open();
                 objetoEscalar = comando.ExecuteScalar();
-                conexion.Close();
                 if (objetoEscalar != null)
                     result = true;
                 else
                     result = false;
+                conexion.Close();
+                
             }
             catch (Exception)
             {
-
+                conexion.Close();
                 throw new Exception("Error buscando la clave del libro");
 
             }
@@ -108,6 +109,45 @@ namespace AccesoDatos
             }
             return result;
         }
+        
+        public int insertar(ELibro libro)
+        {   
+            int result = -1;
+            string sentencia = "Insert into Libro values(@claveLibro," +
+                "@titulo,@claveAutor,@claveCategoria)";
+
+            SqlConnection conexion = new SqlConnection(cadConexion);
+            SqlCommand comando = new SqlCommand(sentencia,conexion);
+
+            comando.Parameters.AddWithValue("@claveLibro", libro.ClaveLibro);
+            comando.Parameters.AddWithValue("@titulo", libro.Titulo);
+            comando.Parameters.AddWithValue("@claveAutor", libro.ClaveAutor);
+            comando.Parameters.AddWithValue("@claveCategoria", libro.Categoria.ClaveCategoria);
+
+            try
+            {
+                conexion.Open();
+                result = comando.ExecuteNonQuery();
+                conexion.Close();
+            }
+            catch (Exception)
+            {
+                conexion.Close();
+                throw new Exception("No se ha ingresado el libro");
+            }
+            finally
+            {
+                conexion.Dispose();
+                comando.Dispose();
+            }
+
+
+            return result;
+        }
+        
+
+        
+        
         #endregion
     }
 }
