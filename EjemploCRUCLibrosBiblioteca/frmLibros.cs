@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Entidades;
 using LogicaNegocio;
+using System.Data;
 
 
 namespace EjemploCRUCLibrosBiblioteca
@@ -27,6 +28,37 @@ namespace EjemploCRUCLibrosBiblioteca
             limpiarTextos();
         }
 
+        private void llenarDGV(string condicion = "")
+        {
+            LNLibro ln = new LNLibro(Config.getCadConexion);
+            DataSet ds;
+            try
+            {
+                ds = ln.listarTodos(condicion);
+                //ds = ln.listarTodos("titulo like %amor%");
+
+                dgvLibros.DataSource = ds.Tables[0];
+
+            }
+            catch (Exception ex)
+            {
+
+                mensajeError(ex);
+            }
+
+            dgvLibros.Columns[0].HeaderText = "Clave de Libro";
+            dgvLibros.Columns[1].HeaderText = "Título";
+            dgvLibros.Columns[2].HeaderText = "Clave de Autor";
+            dgvLibros.Columns[3].HeaderText = "Clave de Categoría";
+
+            dgvLibros.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
+        }
+
+        private void mensajeError(Exception ex)
+        {
+            MessageBox.Show(ex.Message, "Error!",
+                       MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
         private void limpiarTextos()
         {
             txtClaveLibro.Text = string.Empty;
@@ -104,10 +136,14 @@ namespace EjemploCRUCLibrosBiblioteca
                 }
                 catch(Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error!", 
-                        MessageBoxButtons.OK,MessageBoxIcon.Error);
+                    mensajeError(ex);
                 }
             }
+        }
+
+        private void frmLibros_Load(object sender, EventArgs e)
+        {
+            llenarDGV();
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Entidades;
 using System.Data.SqlClient;
+using System.Data;
 namespace AccesoDatos
 {
     public class ADLibro
@@ -145,7 +146,36 @@ namespace AccesoDatos
             return result;
         }
         
+        public DataSet listarTodos(string condicion = "")
+        {
+            DataSet setLibros = new DataSet();
+            string sentencia = "Select claveLibro, titulo, claveAutor, " +
+                "claveCategoria from Libro";
+            if (!string.IsNullOrEmpty(condicion))
+                sentencia = string.Format("{0} where {1}, sentencia, condicion");
 
+            //sentencia = $"{sentencia} where {condicion}";
+
+            SqlConnection conexion = new SqlConnection(cadConexion);
+            SqlDataAdapter adaptador;
+            try
+            {
+                adaptador = new SqlDataAdapter(sentencia, conexion);
+                adaptador.Fill(setLibros);
+                adaptador.Dispose();
+            }
+            catch (Exception)
+            {
+
+                throw new Exception("Ha ocurrido algo!!!");
+            }
+            finally
+            {
+                conexion.Dispose();
+            }
+
+            return setLibros;
+        }
         
         
         #endregion

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Entidades;
 using AccesoDatos;
+using System.Data;
 
 namespace LogicaNegocio
 {
@@ -77,6 +78,22 @@ namespace LogicaNegocio
                 throw ex;
             }
             return result;
+        }
+
+        public DataSet listarTodos(string condicion = "")
+        {
+            DataSet SetLibros;
+            ADLibro adLibro = new ADLibro(cadConexion);
+            try
+            {
+                SetLibros = adLibro.listarTodos(condicion);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return SetLibros;
         }
         #endregion
     }
