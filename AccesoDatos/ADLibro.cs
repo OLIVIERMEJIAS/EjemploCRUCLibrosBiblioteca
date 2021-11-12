@@ -8,10 +8,11 @@ namespace AccesoDatos
 {
     public class ADLibro
     {
-        private string cadConexion;
-        private string mensaje;
-
-        public string Mensaje { get; }
+        #region Atributos
+         private string cadConexion;
+         private string mensaje;
+         public string Mensaje { get; }
+        #endregion
 
         #region Constructores
         public ADLibro()

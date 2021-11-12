@@ -16,18 +16,83 @@ namespace EjemploCRUCLibrosBiblioteca
 {
     public partial class frmLibros : Form
     {            
-        ECategoria categoria = new ECategoria("C0001","Comic");
 
         public frmLibros()
         {
             InitializeComponent();
         }
+        #region MetodosClick
+            private void btnNuevo_Click(object sender, EventArgs e)
+            {
+                limpiarTextos();
+            }
+          private void btnGuardar_Click(object sender, EventArgs e)
+                {
+                    ELibro libro;
+                    EAutor autor;
+                    ECategoria cat;
+                    LNLibro ln = new LNLibro(Config.getCadConexion);
+                    LNAutor lnAutor = new LNAutor(Config.getCadConexion);
+                    LNCategoria lnCat = new LNCategoria(Config.getCadConexion);
+                    if (textosLlenos())
+                    {
+                        cat = new ECategoria(txtClaveCategoria.Text);
+                        libro = new ELibro(txtClaveLibro.Text,
+                            txtTituloLibro.Text,
+                            txtClaveAutor.Text, cat,
+                            false);
+                        autor = new EAutor(txtClaveAutor.Text);
+                        try
+                        {
+                   
+                            if (!ln.libroRepetido(libro))
+                            {
+                                if (!ln.claveLibroRepetida(libro.ClaveLibro))
+                                {
+                                    if (lnAutor.claveAutorExiste(autor.ClaveAutor))
+                                    {
+                                        if (lnCat.claveCategoriaExiste(cat.ClaveCategoria))
+                                        {
+                                            if (ln.insertar(libro) > 0)
+                                            {
+                                                MessageBox.Show("Guardado con éxito!");
+                                                //TODO:
+                                            }
+                                        }
+                                        else
+                                            MessageBox.Show("La clave de la Categoría ingresada no existe!!");
+                                
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("La clave de autor ingresado no existe!!");
+                                    }
+                           
+                                }
+                                else
+                                    MessageBox.Show("Esa Clave de libro " +
+                                        "ya se encuentra asgnada a otro libro");
+                                txtClaveLibro.Focus();
+                            }
+                            else
+                            {
+                                MessageBox.Show("Ese título ya existe para el autor " +
+                                    "indicado");
+                                txtTituloLibro.Focus();
+                            }
+                        }
+                        catch(Exception ex)
+                        {
+                            mensajeError(ex);
+                        }
+                    }
+                }
 
-        private void btnNuevo_Click(object sender, EventArgs e)
-        {
-            limpiarTextos();
-        }
+        #endregion
 
+        #region MetodosComplementarios
+
+        
         private void llenarDGV(string condicion = "")
         {
             LNLibro ln = new LNLibro(Config.getCadConexion);
@@ -63,8 +128,8 @@ namespace EjemploCRUCLibrosBiblioteca
         {
             txtClaveLibro.Text = string.Empty;
             txtTituloLibro.Text = string.Empty;
-            txtClaveAutor.Text = "A0023";
-            txtClaveCategoria.Text = categoria.ClaveCategoria;
+            txtClaveAutor.Text = string.Empty;
+            txtClaveCategoria.Text = string.Empty;
             txtClaveLibro.Focus();
         }
 
@@ -94,56 +159,17 @@ namespace EjemploCRUCLibrosBiblioteca
             }
             else
                 return true;
-            if(result)
+            if(!result)
                 MessageBox.Show(msj,"Atención",MessageBoxButtons.OK,MessageBoxIcon.Warning);
             return result;
         }
 
-        private void btnGuardar_Click(object sender, EventArgs e)
-        {
-            ELibro libro;
-            LNLibro ln = new LNLibro(Config.getCadConexion);
-            if (textosLlenos())
-            {
-                libro = new ELibro(txtClaveLibro.Text,
-                    txtTituloLibro.Text,
-                    txtClaveAutor.Text, categoria,
-                    false);
-                try
-                {
-                   
-                    if (!ln.libroRepetido(libro))
-                    {
-                        if (!ln.claveLibroRepetida(libro.ClaveLibro))
-                        {
-                            if (ln.insertar(libro) > 0)
-                            {
-                                MessageBox.Show("Guardado con éxito!");
-                                //TODO:
-                            }
-                        }
-                        else
-                            MessageBox.Show("Esa Clave de libro " +
-                                "ya se encuentra asgnada a otro libro");
-                        txtClaveLibro.Focus();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Ese título ya existe para el autor " +
-                            "indicado");
-                        txtTituloLibro.Focus();
-                    }
-                }
-                catch(Exception ex)
-                {
-                    mensajeError(ex);
-                }
-            }
-        }
+      
 
         private void frmLibros_Load(object sender, EventArgs e)
         {
             llenarDGV();
         }
+        #endregion
     }
 }

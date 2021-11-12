@@ -9,9 +9,11 @@ namespace LogicaNegocio
 {
     public class LNLibro
     {
-        private string mensaje;
-        private string cadConexion;
-
+        #region Atributos
+            private string mensaje;
+            private string cadConexion;
+        #endregion
+        
         #region Constructores
         public LNLibro()
         {

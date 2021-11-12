@@ -6,22 +6,31 @@ namespace Entidades
 {
     public class ECategoria
     {
-        string claveCategoria;
-        string descripcion;
+        #region Atributos
+            string claveCategoria;
+            string descripcion;
+        #endregion
 
-        public string ClaveCategoria { get; set; }
-        public string Descripcion { get; set; }
+        #region Propiedades
+            public string ClaveCategoria { get; set; }
+            public string Descripcion { get; set; }
+        #endregion
 
-        public ECategoria()
-        {
-            ClaveCategoria = string.Empty;
-            Descripcion = string.Empty;
-        }
+        #region Constructores
+            public ECategoria()
+                    {
+                        ClaveCategoria = string.Empty;
+                        Descripcion = string.Empty;
+                    }
 
-        public ECategoria(string claCate, string desc)
-        {
-            ClaveCategoria = claCate;
-            Descripcion = desc;
-        }
+                    public ECategoria(string claCate, string desc = "")
+                    {
+                        ClaveCategoria = claCate;
+                        Descripcion = desc;
+                    }
+        #endregion
+        
+
+
     }
 }
