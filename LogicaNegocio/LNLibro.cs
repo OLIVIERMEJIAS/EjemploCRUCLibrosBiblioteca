@@ -97,6 +97,23 @@ namespace LogicaNegocio
             }
             return SetLibros;
         }
+
+        public ELibro buscarRegistro(string condicion)
+        {
+            ELibro libro;
+            ADLibro adl = new ADLibro(cadConexion);
+
+            try
+            {
+                libro = adl.buscarRegistro(condicion);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return libro;
+        }
         #endregion
     }
 }

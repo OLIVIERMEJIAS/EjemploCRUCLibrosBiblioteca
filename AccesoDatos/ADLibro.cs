@@ -177,7 +177,47 @@ namespace AccesoDatos
 
             return setLibros;
         }
-        
+        //Otro <List>
+
+        public ELibro buscarRegistro(string condicion)
+        {
+            ELibro libro = new ELibro();
+            string sentencia = "Select claveLibro, titulo, claveAutor, claveCategoria from Libro";
+            SqlConnection conexion = new SqlConnection(cadConexion);
+
+            sentencia = $"{sentencia} where {condicion}";
+
+            SqlCommand comando = new SqlCommand(sentencia, conexion);
+            SqlDataReader dato;
+
+            try
+            {
+                conexion.Open();
+                dato = comando.ExecuteReader();
+                if(dato.HasRows)
+                {
+                    dato.Read();//Traerá un registro
+                    libro.ClaveLibro = dato.GetString(0);
+                    libro.Titulo = dato.GetString(1);
+                    libro.ClaveAutor = dato.GetString(2);
+                    libro.Categoria.ClaveCategoria =                dato.GetString(3);
+                }
+                conexion.Close();
+            }
+            catch (Exception)
+            {
+
+                throw new Exception("No se ha encontrado el libro");
+            }
+            finally
+            {
+                comando.Dispose();
+                conexion.Dispose();
+            }
+
+
+            return libro;
+        }
         
         #endregion
     }

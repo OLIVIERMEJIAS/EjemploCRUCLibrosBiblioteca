@@ -150,6 +150,7 @@ namespace EjemploCRUCLibrosBiblioteca
             // 
             // btnEliminar
             // 
+            this.btnEliminar.Enabled = false;
             this.btnEliminar.Image = global::EjemploCRUCLibrosBiblioteca.Properties.Resources.document_delete__1_;
             this.btnEliminar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnEliminar.Location = new System.Drawing.Point(330, 51);
@@ -159,6 +160,7 @@ namespace EjemploCRUCLibrosBiblioteca
             this.btnEliminar.Text = "Eliminar";
             this.btnEliminar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnEliminar.UseVisualStyleBackColor = true;
+            this.btnEliminar.Click += new System.EventHandler(this.btnEliminar_Click);
             // 
             // btnSalir
             // 
@@ -175,12 +177,14 @@ namespace EjemploCRUCLibrosBiblioteca
             // 
             this.dgvLibros.AllowUserToAddRows = false;
             this.dgvLibros.AllowUserToDeleteRows = false;
+            this.dgvLibros.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvLibros.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvLibros.Location = new System.Drawing.Point(12, 105);
             this.dgvLibros.Name = "dgvLibros";
             this.dgvLibros.ReadOnly = true;
             this.dgvLibros.Size = new System.Drawing.Size(564, 217);
             this.dgvLibros.TabIndex = 13;
+            this.dgvLibros.DoubleClick += new System.EventHandler(this.dgvLibros_DoubleClick);
             // 
             // frmLibros
             // 

@@ -15,8 +15,9 @@ using System.Data;
 namespace EjemploCRUCLibrosBiblioteca
 {
     public partial class frmLibros : Form
-    {            
-
+    {
+        LNLibro ln = new LNLibro(Config.getCadConexion);
+        ELibro libro;
         public frmLibros()
         {
             InitializeComponent();
@@ -28,10 +29,9 @@ namespace EjemploCRUCLibrosBiblioteca
             }
           private void btnGuardar_Click(object sender, EventArgs e)
                 {
-                    ELibro libro;
                     EAutor autor;
                     ECategoria cat;
-                    LNLibro ln = new LNLibro(Config.getCadConexion);
+                    
                     LNAutor lnAutor = new LNAutor(Config.getCadConexion);
                     LNCategoria lnCat = new LNCategoria(Config.getCadConexion);
                     if (textosLlenos())
@@ -130,7 +130,9 @@ namespace EjemploCRUCLibrosBiblioteca
             txtTituloLibro.Text = string.Empty;
             txtClaveAutor.Text = string.Empty;
             txtClaveCategoria.Text = string.Empty;
+            libro = null;
             txtClaveLibro.Focus();
+            btnEliminar.Enabled = false;
         }
 
         private bool textosLlenos()
@@ -171,5 +173,37 @@ namespace EjemploCRUCLibrosBiblioteca
             llenarDGV();
         }
         #endregion
+
+        private void dgvLibros_DoubleClick(object sender, EventArgs e)
+        {
+            int fila = dgvLibros.CurrentRow.Index;
+            string clave = dgvLibros[0,fila].Value.ToString();
+            string condicion = $"claveLibro='{clave}'";
+
+            try
+            {
+                libro = ln.buscarRegistro(condicion);
+
+                if (libro != null)
+                {
+                    txtClaveLibro.Text = libro.ClaveLibro;
+                    txtTituloLibro.Text = libro.Titulo;
+                    txtClaveAutor.Text = libro.ClaveAutor;
+                    txtClaveCategoria.Text =                        libro.Categoria.ClaveCategoria;
+
+                    btnEliminar.Enabled = true;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                mensajeError(ex);
+            }
+        }
+
+        private void btnEliminar_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
