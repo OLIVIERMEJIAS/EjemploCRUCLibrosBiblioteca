@@ -27,66 +27,82 @@ namespace EjemploCRUCLibrosBiblioteca
             {
                 limpiarTextos();
             }
-          private void btnGuardar_Click(object sender, EventArgs e)
+
+        public void insertarLibro(ELibro libro,EAutor autor,ECategoria cat)
+        {
+            LNLibro ln = new LNLibro();
+            LNAutor lnAutor = new LNAutor();
+            LNCategoria lnCat = new LNCategoria();
+            try
+            {
+
+                if (!ln.libroRepetido(libro))
                 {
-                    EAutor autor;
-                    ECategoria cat;
-                    
-                    LNAutor lnAutor = new LNAutor(Config.getCadConexion);
-                    LNCategoria lnCat = new LNCategoria(Config.getCadConexion);
-                    if (textosLlenos())
+                    if (!ln.claveLibroRepetida(libro.ClaveLibro))
                     {
-                        cat = new ECategoria(txtClaveCategoria.Text);
-                        libro = new ELibro(txtClaveLibro.Text,
-                            txtTituloLibro.Text,
-                            txtClaveAutor.Text, cat,
-                            false);
-                        autor = new EAutor(txtClaveAutor.Text);
-                        try
+                        if (lnAutor.claveAutorExiste(autor.ClaveAutor))
                         {
-                   
-                            if (!ln.libroRepetido(libro))
+                            if (lnCat.claveCategoriaExiste(cat.ClaveCategoria))
                             {
-                                if (!ln.claveLibroRepetida(libro.ClaveLibro))
+                                if (ln.insertar(libro) > 0)
                                 {
-                                    if (lnAutor.claveAutorExiste(autor.ClaveAutor))
-                                    {
-                                        if (lnCat.claveCategoriaExiste(cat.ClaveCategoria))
-                                        {
-                                            if (ln.insertar(libro) > 0)
-                                            {
-                                                MessageBox.Show("Guardado con éxito!");
-                                                //TODO:
-                                            }
-                                        }
-                                        else
-                                            MessageBox.Show("La clave de la Categoría ingresada no existe!!");
-                                
-                                    }
-                                    else
-                                    {
-                                        MessageBox.Show("La clave de autor ingresado no existe!!");
-                                    }
-                           
+                                    MessageBox.Show("Guardado con éxito!");
+                                    //TODO:
                                 }
-                                else
-                                    MessageBox.Show("Esa Clave de libro " +
-                                        "ya se encuentra asgnada a otro libro");
-                                txtClaveLibro.Focus();
                             }
                             else
-                            {
-                                MessageBox.Show("Ese título ya existe para el autor " +
-                                    "indicado");
-                                txtTituloLibro.Focus();
-                            }
+                                MessageBox.Show("La clave de la Categoría ingresada no existe!!");
+
                         }
-                        catch(Exception ex)
+                        else
                         {
-                            mensajeError(ex);
+                            MessageBox.Show("La clave de autor ingresado no existe!!");
                         }
+
                     }
+                    else
+                        MessageBox.Show("Esa Clave de libro " +
+                            "ya se encuentra asgnada a otro libro");
+                    txtClaveLibro.Focus();
                 }
+                else
+                {
+                    MessageBox.Show("Ese título ya existe para el autor " +
+                        "indicado");
+                    txtTituloLibro.Focus();
+                }
+            }
+            catch (Exception ex)
+            {
+                mensajeError(ex);
+            }
+        }
+        private void btnGuardar_Click(object sender, EventArgs e)
+        {
+            EAutor autor = new EAutor(txtClaveAutor.Text);
+            ECategoria cat = new ECategoria(txtClaveCategoria.Text);
+
+            LNAutor lnAutor = new LNAutor(Config.getCadConexion);
+            LNCategoria lnCat = new LNCategoria(Config.getCadConexion);
+            if (textosLlenos())
+            {
+                if (libro == null)
+                {
+                    //cat = new ECategoria(txtClaveCategoria.Text);
+                    libro = new ELibro(txtClaveLibro.Text,
+                        txtTituloLibro.Text,
+                        txtClaveAutor.Text, cat,
+                        false);
+                    //autor = new EAutor(txtClaveAutor.Text);
+                }
+                else { }
+                if (!libro.Existe)
+                    insertarLibro(libro,autor,cat);
+
+            }
+        }
+
+            
 
         #endregion
 
@@ -133,6 +149,7 @@ namespace EjemploCRUCLibrosBiblioteca
             libro = null;
             txtClaveLibro.Focus();
             btnEliminar.Enabled = false;
+            llenarDGV();
         }
 
         private bool textosLlenos()
@@ -186,6 +203,7 @@ namespace EjemploCRUCLibrosBiblioteca
 
                 if (libro != null)
                 {
+                    libro.Existe = true;
                     txtClaveLibro.Text = libro.ClaveLibro;
                     txtTituloLibro.Text = libro.Titulo;
                     txtClaveAutor.Text = libro.ClaveAutor;
@@ -203,7 +221,35 @@ namespace EjemploCRUCLibrosBiblioteca
 
         private void btnEliminar_Click(object sender, EventArgs e)
         {
+            DialogResult resp;
+            string msj;
+            int result;
+            if(libro != null && libro.Existe)
+            {
+                resp = MessageBox.Show($"Conforma que esea eliminar el libro {libro.Titulo} con el código {libro.ClaveLibro}?", "Confirmación",MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+                if(resp == DialogResult.Yes)
+                {
+                    result = ln.eliminar(libro);
+                    msj = ln.eliminarProcedure(libro);
+                    MessageBox.Show(msj);
+                    //if (result > 0)
+                    //{
+                    //    MessageBox.Show("Libro eliminado",                   "EXITO!!");
+                    limpiarTextos();
 
+                    //}
+                    //else if(result == -1) {
+                    //    MessageBox.Show("Se ha presentado un error", "ERROR");
+                    //}
+                }
+                else
+                {
+                    limpiarTextos();
+                }
+            }
         }
     }
 }
+    //TODO: LLENAR UN LIST
+    //TODO: MODIFICAR PENSAR
