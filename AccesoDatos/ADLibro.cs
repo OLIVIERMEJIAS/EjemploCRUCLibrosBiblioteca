@@ -153,12 +153,13 @@ namespace AccesoDatos
             string sentencia = "Select claveLibro, titulo, claveAutor, " +
                 "claveCategoria from Libro";
             if (!string.IsNullOrEmpty(condicion))
-                sentencia = string.Format("{0} where {1}, sentencia, condicion");
-
-            //sentencia = $"{sentencia} where {condicion}";
+            {
+                sentencia = $"{sentencia} where {condicion}";
+            }
 
             SqlConnection conexion = new SqlConnection(cadConexion);
             SqlDataAdapter adaptador;
+            
             try
             {
                 adaptador = new SqlDataAdapter(sentencia, conexion);
