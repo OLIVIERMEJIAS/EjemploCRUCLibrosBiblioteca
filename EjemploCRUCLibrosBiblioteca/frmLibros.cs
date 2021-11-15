@@ -79,6 +79,8 @@ namespace EjemploCRUCLibrosBiblioteca
         }
         private void btnGuardar_Click(object sender, EventArgs e)
         {
+           
+            string clave = "", titulo = "", claveAutor = "";
             EAutor autor = new EAutor(txtClaveAutor.Text);
             ECategoria cat = new ECategoria(txtClaveCategoria.Text);
 
@@ -86,6 +88,7 @@ namespace EjemploCRUCLibrosBiblioteca
             LNCategoria lnCat = new LNCategoria(Config.getCadConexion);
             if (textosLlenos())
             {
+                //este if termina con un libro lleno
                 if (libro == null)
                 {
                     //cat = new ECategoria(txtClaveCategoria.Text);
@@ -95,20 +98,110 @@ namespace EjemploCRUCLibrosBiblioteca
                         false);
                     //autor = new EAutor(txtClaveAutor.Text);
                 }
-                else { }
-                if (!libro.Existe)
+                else
+                {
+                     if(hayCambios(ref clave, ref titulo, ref           claveAutor))
+                    {
+                        libro.ClaveLibro = txtClaveLibro.Text;
+                        libro.Titulo = txtTituloLibro.Text;
+                        libro.ClaveAutor = txtClaveAutor.Text;
+                        libro.Categoria.ClaveCategoria =                 txtClaveCategoria.Text;
+                    }
+                
+                }
+                if (!libro.Existe) //insert
                     insertarLibro(libro,autor,cat);
+                else
+                {
+                    if (string.IsNullOrEmpty(clave) == false)
+                    {
+                        //update
+
+                        if (ln.claveLibroRepetida(libro.ClaveLibro) == false)
+                        {
+                            revisiontitulo(clave, claveAutor, titulo);
+                        }
+                        else
+                        {
+                            MessageBox.Show("La clave nueva                     del libro ya está en uso");
+                            txtClaveLibro.Focus();
+                        }
+
+                    }
+                    else
+                    {
+                        revisiontitulo("", claveAutor, titulo);
+                    }
+ 
+                }
 
             }
         }
 
-            
+        private void revisiontitulo(string clave, string claveAutor, string titulo)
+        {
+            if (!string.IsNullOrEmpty(titulo) || !string.IsNullOrEmpty(claveAutor))
+            {
+                if (ln.libroRepetido(libro) == false)
+                {
+                    hacerModificacion(clave);
+
+                }
+                else
+                {
+                    MessageBox.Show("No se                          pudo modificar, título y autor                      repetidos");
+                }
+            }
+            else
+            {
+                hacerModificacion(clave);
+            }
+        }
+
+        private void hacerModificacion(string clave)
+        {
+            if (ln.modificar(libro, clave) > 0)
+            {
+                MessageBox.Show("Actualización realizada");
+                
+            }
+            else
+            {
+                MessageBox.Show("No se pudo modificar");
+            }
+            limpiarTextos();
+        }
+        private bool hayCambios(ref string clave, ref string titulo, ref string autor)
+        {
+            bool result = false;
+            if (txtClaveLibro.Text != libro.ClaveLibro)
+            {
+                result = true;
+                clave = libro.ClaveLibro;//clave vieja
+            }
+
+            if (txtTituloLibro.Text != libro.Titulo)
+            {
+                result = true;
+                titulo = libro.Titulo;
+            }
+
+            if (txtClaveAutor.Text != libro.ClaveAutor)
+            {
+                result = true;
+                autor = libro.ClaveAutor;
+            }
+
+            return result;
+        }
+
+
 
         #endregion
 
         #region MetodosComplementarios
 
-        
+
         private void llenarDGV(string condicion = "")
         {
             LNLibro ln = new LNLibro(Config.getCadConexion);

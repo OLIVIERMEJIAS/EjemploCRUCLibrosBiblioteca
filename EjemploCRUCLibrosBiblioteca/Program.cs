@@ -16,7 +16,7 @@ namespace EjemploCRUCLibrosBiblioteca
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmPrestamo());
+            Application.Run(new frmLibros());
         }
     }
 }

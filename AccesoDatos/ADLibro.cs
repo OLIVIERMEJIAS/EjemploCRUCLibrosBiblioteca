@@ -308,11 +308,12 @@ namespace AccesoDatos
             comando.Parameters.AddWithValue("@titulo", libro.Titulo);
             comando.Parameters.AddWithValue("@claveAutor", libro.ClaveAutor);
             comando.Parameters.AddWithValue("@claveCategoria", libro.Categoria.ClaveCategoria);
-            try
-            {
-                conexion.Open();
+            conexion.Open();
                 result = comando.ExecuteNonQuery();
                 conexion.Close();
+            try
+            {
+                
             }
             catch (Exception)
             {

@@ -151,7 +151,7 @@ namespace LogicaNegocio
         public int modificar(ELibro libro, string claveVieja = "")
         {
             int result;
-            ADLibro adl = new ADLibro();
+            ADLibro adl = new ADLibro(cadConexion);
             try
             {
                 result = adl.modificar(libro, claveVieja);
