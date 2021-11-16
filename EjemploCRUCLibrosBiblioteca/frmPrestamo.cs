@@ -130,6 +130,7 @@ namespace EjemploCRUCLibrosBiblioteca
                 }
                 else
                     MessageBox.Show("El libro no se encuentra préstado!!");
+                btnBuscarUsuario_Click(sender, e);
             }
             catch (Exception ex)
             {
@@ -152,7 +153,7 @@ namespace EjemploCRUCLibrosBiblioteca
                     if (lnP.eliminarPrestamo(clavePrest))
                     {
                         MessageBox.Show("Se ha eliminado el préstamo exitosamente!!!");
-                        btnBuscarUsuario_Click(sender, e);
+                       
                     }
                 }
                 else
@@ -160,9 +161,10 @@ namespace EjemploCRUCLibrosBiblioteca
                     if (lnP.eliminarPrestamo(clavePrest))
                     {
                         MessageBox.Show("Se ha eliminado el préstamo exitosamente, pero se debió devolver el libro antes!!!");
-                        btnBuscarUsuario_Click(sender, e);
+                        
                     }
                 }
+                btnBuscarUsuario_Click(sender, e);
             }
             catch (Exception ex)
             {
@@ -173,29 +175,37 @@ namespace EjemploCRUCLibrosBiblioteca
 
         private void btnPrestarEjemplar_Click(object sender, EventArgs e)
         {
-            bool result;
-            int fila = dgvEjemplares.CurrentRow.Index;
-            string claveEjemplar = dgvEjemplares[0, fila].Value.ToString();
-            DateTime fechaD = new DateTime();
-            fechaD = DateTime.Today.AddDays(20);
-            EPrestamo prestamo = new EPrestamo($"P{glob.ClavePrestamo}", claveEjemplar,
-                txtClave.Text, DateTime.Today, fechaD);
-            try
+            if (dgvPrestamos.RowCount != 0)
             {
-                result = lnP.registrarPrestamo(prestamo);
-                if (result)
-                {
-                    glob.ClavePrestamo += 1;
-                    lnE.actualizarEstadoEjemplar("ES002", claveEjemplar);
-                    MessageBox.Show("Préstamo registrado!! Libro préstado exitosamente!!!");
-                    btnBuscarUsuario_Click(sender, e);
-                    btnEjemplares_Click(sender, e);
-                }
+                MessageBox.Show("El usuario actual tiene préstamos pendientes," +
+                    " no es posible otro préstamo");
             }
-            catch (Exception ex)
+            else
             {
+                bool result;
+                int fila = dgvEjemplares.CurrentRow.Index;
+                string claveEjemplar = dgvEjemplares[0, fila].Value.ToString();
+                DateTime fechaD = new DateTime();
+                fechaD = DateTime.Today.AddDays(20);
+                EPrestamo prestamo = new EPrestamo($"P{glob.ClavePrestamo}", claveEjemplar,
+                    txtClave.Text, DateTime.Today, fechaD);
+                try
+                {
+                    result = lnP.registrarPrestamo(prestamo);
+                    if (result)
+                    {
+                        glob.ClavePrestamo += 1;
+                        lnE.actualizarEstadoEjemplar("ES002", claveEjemplar);
+                        MessageBox.Show("Préstamo registrado!! Libro préstado exitosamente!!!");
+                        btnBuscarUsuario_Click(sender, e);
+                        btnEjemplares_Click(sender, e);
+                    }
+                }
+                catch (Exception ex)
+                {
 
-                throw ex;
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
     }

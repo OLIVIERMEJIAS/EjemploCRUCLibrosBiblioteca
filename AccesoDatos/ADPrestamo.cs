@@ -30,17 +30,18 @@ namespace AccesoDatos
             comando.Parameters.AddWithValue("@claveP", prestamo.ClavePrestamo);
             comando.Parameters.AddWithValue("@claveE", prestamo.ClaveEjemplar);
             comando.Parameters.AddWithValue("@claveU", prestamo.ClaveUsuario);
-            comando.Parameters.AddWithValue("@fechaP", prestamo.FechaPrestamo.ToString());
-            comando.Parameters.AddWithValue("@fechaD", prestamo.FechaDevolucion.ToString());
-             conexion.Open();
+            comando.Parameters.AddWithValue("@fechaP", prestamo.FechaPrestamo).ToString();
+            comando.Parameters.AddWithValue("@fechaD", prestamo.FechaDevolucion).ToString();
+             
+               
+            try
+            {
+               conexion.Open();
                 if (comando.ExecuteNonQuery() != null)
                 {
                     result = true;
                 }
-                conexion.Close();
-            try
-            {
-               
+                conexion.Close(); 
             }
             catch (Exception)
             {
