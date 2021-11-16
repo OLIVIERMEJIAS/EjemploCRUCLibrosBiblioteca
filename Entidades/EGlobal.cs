@@ -12,7 +12,7 @@ namespace Entidades
 
         public EGlobal()
         {
-            clavePrestamo = 1000;
+            ClavePrestamo = 1000;
         }
 
 

@@ -17,17 +17,17 @@ namespace Entidades
             ClavePrestamo = string.Empty;
             ClaveEjemplar = string.Empty;
             ClaveUsuario = string.Empty;
-            FechaPrestamo = DateTime.Today;
-            FechaDevolucion = DateTime.MaxValue;
+            FechaPrestamo = new DateTime();
+            FechaDevolucion = new DateTime();
         }
 
-        public EPrestamo(string claveP, string claveE, string claveU,
+        public EPrestamo(string claveP, string claveE, string claveU,DateTime fechaP,
          DateTime fechDev)
         {
             ClavePrestamo = claveP;
             ClaveEjemplar = claveE;
+            FechaPrestamo = fechaP;
             ClaveUsuario = claveU;
-  
             FechaDevolucion = fechDev;
         }
     }

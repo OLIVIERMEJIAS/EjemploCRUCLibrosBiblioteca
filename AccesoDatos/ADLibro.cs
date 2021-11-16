@@ -4,6 +4,7 @@ using System.Text;
 using Entidades;
 using System.Data.SqlClient;
 using System.Data;
+using System.Linq;
 namespace AccesoDatos
 {
     public class ADLibro
@@ -327,6 +328,43 @@ namespace AccesoDatos
             }
 
             return result;
+        }
+
+        public List<ELibro> listarLibros(string condicion){
+            List<ELibro> listarLibros = new List<ELibro>();
+            DataTable tabla = new DataTable();
+            string sentencia;
+
+            SqlDataAdapter adaptador;
+
+            sentencia = "Select claveLibro, titulo, claveAutor, claveCategoria from Libro";
+            if (!string.IsNullOrEmpty(condicion))
+                sentencia = string.Format("{0} {1}",sentencia, condicion);
+            //sentencia = $"{sentencia} where {condicion}";
+            try
+            {
+                adaptador = new SqlDataAdapter(sentencia, cadConexion);
+                adaptador.Fill(tabla);
+
+                //LINQ
+                listarLibros = (from DataRow registro in tabla.Rows select new ELibro()
+                {
+                    ClaveLibro = registro[0].ToString(),
+                    Titulo = registro[1].ToString(),
+                    ClaveAutor = registro[2].ToString(),
+                    Categoria = new ECategoria()
+                    {
+                        ClaveCategoria = registro                   [3].ToString()
+                    }
+                }).ToList();
+            }
+            catch (Exception)
+            {
+
+                throw new Exception("");
+            }
+
+            return listarLibros;
         }
         #endregion
     }

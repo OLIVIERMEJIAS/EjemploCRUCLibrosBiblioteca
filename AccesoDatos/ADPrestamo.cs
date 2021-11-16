@@ -30,14 +30,15 @@ namespace AccesoDatos
             comando.Parameters.AddWithValue("@claveP", prestamo.ClavePrestamo);
             comando.Parameters.AddWithValue("@claveE", prestamo.ClaveEjemplar);
             comando.Parameters.AddWithValue("@claveU", prestamo.ClaveUsuario);
-            comando.Parameters.AddWithValue("@fechaP", prestamo.FechaPrestamo);
-            comando.Parameters.AddWithValue("@fechaD", prestamo.FechaDevolucion);
+            comando.Parameters.AddWithValue("@fechaP", prestamo.FechaPrestamo.ToString());
+            comando.Parameters.AddWithValue("@fechaD", prestamo.FechaDevolucion.ToString());
              conexion.Open();
                 if (comando.ExecuteNonQuery() != null)
                 {
                     result = true;
                 }
-                conexion.Close();try
+                conexion.Close();
+            try
             {
                
             }
@@ -93,9 +94,10 @@ namespace AccesoDatos
         {
 
             DataSet setPrest = new DataSet();
-            string sentencia = "Select clavePrestamo, claveEjemplar, claveUsuario, " +
-                "fechaPrestamo, fechaDevolucion from Prestamo";
-            string condicion = $"claveUsuario = '{usu.ClaveUsuario}'";
+            string sentencia = "Select p.clavePrestamo, p.claveEjemplar, p.claveUsuario, " +
+                "p.fechaPrestamo, p.fechaDevolucion from Prestamo p inner join Ejemplar e " +
+                "On p.claveEjemplar = e.claveEjemplar";
+            string condicion = $"p.claveUsuario = '{usu.ClaveUsuario}' and e.claveEstado = 'ES002'";
                 sentencia = $"{sentencia} where {condicion}";
             SqlConnection conexion = new SqlConnection(CadConexion);
             SqlDataAdapter adaptador;

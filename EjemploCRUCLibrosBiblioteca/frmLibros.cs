@@ -149,7 +149,7 @@ namespace EjemploCRUCLibrosBiblioteca
                 }
                 else
                 {
-                    MessageBox.Show("No se                          pudo modificar, título y autor                      repetidos");
+                    MessageBox.Show("No se pudo modificar, título y autor                      repetidos");
                 }
             }
             else

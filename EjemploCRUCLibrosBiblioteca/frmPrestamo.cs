@@ -40,7 +40,7 @@ namespace EjemploCRUCLibrosBiblioteca
                     dgvPrestamos.Columns[1].HeaderText = "Clave de Ejemplar";
                     dgvPrestamos.Columns[2].HeaderText = "Clave de Usuario";
                     dgvPrestamos.Columns[3].HeaderText = "Fecha Préstamo";
-                    dgvPrestamos.Columns[3].HeaderText = "Fecha Devolución";
+                    dgvPrestamos.Columns[4].HeaderText = "Fecha Devolución";
 
                     dgvLibros.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
                 }
@@ -179,7 +179,7 @@ namespace EjemploCRUCLibrosBiblioteca
             DateTime fechaD = new DateTime();
             fechaD = DateTime.Today.AddDays(20);
             EPrestamo prestamo = new EPrestamo($"P{glob.ClavePrestamo}", claveEjemplar,
-                txtClave.Text, fechaD);
+                txtClave.Text, DateTime.Today, fechaD);
             try
             {
                 result = lnP.registrarPrestamo(prestamo);
